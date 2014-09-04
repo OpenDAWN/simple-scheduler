@@ -151,7 +151,7 @@ class SimpleScheduler {
    * @param {Number} delay scheduling delay time
    */
   add(engine, delay = 0) {
-    if (engine.scheduler !== null)
+    if (engine.listeners('resync').length > 0)
       throw new Error("object has already been added to a scheduler");
 
     if (!engine.syncEvent)
@@ -160,7 +160,9 @@ class SimpleScheduler {
     if (!engine.executeEvent)
       throw new Error("object does not have a executeEvent method");
 
-    engine.scheduler = this;
+    engine.on('resync', resync);
+    engine.on('reschedule', reschedule);
+
     this.__insertEvent(engine, this.time + delay);
     this.__reschedule();
   }
@@ -170,10 +172,11 @@ class SimpleScheduler {
    * @param {Object} engine event engine or callback to be removed from the scheduler
    */
   remove(engine) {
-    if (engine.scheduler !== this)
+    if (engine.listeners('resync')[0] !== this)
       throw new Error("object has not been added to this scheduler");
 
-    engine.scheduler = null;
+    engine.removeListener('resync', this)
+    engine.removeListener('reschedule', this)
     this.__withdrawEvent(engine);
     this.__reschedule();
   }
