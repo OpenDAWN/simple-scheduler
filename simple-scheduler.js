@@ -5,7 +5,7 @@
  */
 
 var TimeEngine = require("time-engine");
-var defaultAudioContext = require("audio-context");
+var audioContext = require("audio-Context");
 
 function arrayRemove(array, value) {
   var index = array.indexOf(value);
@@ -19,9 +19,7 @@ function arrayRemove(array, value) {
 }
 
 var SimpleScheduler = (function(){"use strict";var PRS$0 = (function(o,t){o["__proto__"]={"a":t};return o["a"]===t})({},{});var DP$0 = Object.defineProperty;var GOPD$0 = Object.getOwnPropertyDescriptor;var MIXIN$0 = function(t,s){for(var p in s){if(s.hasOwnProperty(p)){DP$0(t,p,GOPD$0(s,p));}}return t};var DPS$0 = Object.defineProperties;var proto$0={};
-  function SimpleScheduler() {var options = arguments[0];if(options === void 0)options = {};var audioContext = arguments[1];if(audioContext === void 0)audioContext = defaultAudioContext;
-    this.__audioContext = audioContext;
-
+  function SimpleScheduler() {
     this.__engines = [];
 
     this.__schedEngines = [];
@@ -34,13 +32,13 @@ var SimpleScheduler = (function(){"use strict";var PRS$0 = (function(o,t){o["__p
      * scheduler (setTimeout) period
      * @type {Number}
      */
-    this.period = options.period || 0.025;
+    this.period = 0.025;
 
     /**
      * scheduler lookahead time (> period)
      * @type {Number}
      */
-    this.lookahead = options.lookahead ||  0.1;
+    this.lookahead = 0.1;
   }DPS$0(SimpleScheduler.prototype,{currentTime: {"get": $currentTime_get$0, "configurable":true,"enumerable":true}});DP$0(SimpleScheduler,"prototype",{"configurable":false,"enumerable":false,"writable":false});
 
   proto$0.__scheduleEngine = function(engine, time) {
@@ -81,7 +79,6 @@ var SimpleScheduler = (function(){"use strict";var PRS$0 = (function(o,t){o["__p
   };
 
   proto$0.__tick = function() {var this$0 = this;
-    var audioContext = this.__audioContext;
     var i = 0;
 
     while (i < this.__schedEngines.length) {
@@ -120,7 +117,7 @@ var SimpleScheduler = (function(){"use strict";var PRS$0 = (function(o,t){o["__p
    * @return {Number} current scheduler time including lookahead
    */
   function $currentTime_get$0() {
-    return this.__currentTime || this.__audioContext.currentTime + this.lookahead;
+    return this.__currentTime || audioContext.currentTime + this.lookahead;
   }
 
   /**

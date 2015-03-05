@@ -5,7 +5,7 @@
  */
 
 var TimeEngine = require("time-engine");
-var defaultAudioContext = require("audio-context");
+var audioContext = require("audio-Context");
 
 function arrayRemove(array, value) {
   var index = array.indexOf(value);
@@ -19,9 +19,7 @@ function arrayRemove(array, value) {
 }
 
 class SimpleScheduler {
-  constructor(options = {}, audioContext = defaultAudioContext) {
-    this.__audioContext = audioContext;
-
+  constructor() {
     this.__engines = [];
 
     this.__schedEngines = [];
@@ -34,13 +32,13 @@ class SimpleScheduler {
      * scheduler (setTimeout) period
      * @type {Number}
      */
-    this.period = options.period || 0.025;
+    this.period = 0.025;
 
     /**
      * scheduler lookahead time (> period)
      * @type {Number}
      */
-    this.lookahead = options.lookahead ||  0.1;
+    this.lookahead = 0.1;
   }
 
   __scheduleEngine(engine, time) {
@@ -81,7 +79,6 @@ class SimpleScheduler {
   }
 
   __tick() {
-    var audioContext = this.__audioContext;
     var i = 0;
 
     while (i < this.__schedEngines.length) {
@@ -120,7 +117,7 @@ class SimpleScheduler {
    * @return {Number} current scheduler time including lookahead
    */
   get currentTime() {
-    return this.__currentTime || this.__audioContext.currentTime + this.lookahead;
+    return this.__currentTime || audioContext.currentTime + this.lookahead;
   }
 
   /**
